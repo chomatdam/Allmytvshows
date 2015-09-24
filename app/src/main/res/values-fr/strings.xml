@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="action_search">Recherche</string>
+    <string name="tabOne">Mes séries</string>
+    <string name="tabTwo">Top séries</string>
+
+</resources>

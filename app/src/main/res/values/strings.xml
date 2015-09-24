@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name" translatable="false">All My TV Shows</string>
+    <string name="action_search">Search</string>
+    <string name="main_msg">My Material TV app</string>
+    <string name="tabOne">My TV shows</string>
+    <string name="tabTwo">Best TV shows</string>
+    <string name="title_activity_search">SearchActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
