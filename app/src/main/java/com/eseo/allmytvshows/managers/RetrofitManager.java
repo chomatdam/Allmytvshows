@@ -30,7 +30,7 @@ public class RetrofitManager {
 
     /**
      * Method with Singleton pattern to instantiate only one time the MovieDB service.
-     * @return instance {@link RetrofitManager}
+     * @return realm {@link RetrofitManager}
      */
     public static RetrofitManager newInstance() {
         if (instance == null) {

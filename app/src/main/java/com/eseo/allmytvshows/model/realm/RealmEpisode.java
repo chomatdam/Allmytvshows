@@ -17,14 +17,6 @@ public class RealmEpisode extends RealmObject {
 
     }
 
-    public RealmEpisode(long id, String name, String air_date, boolean seen, RealmSeason season) {
-        this.id = id;
-        this.name = name;
-        this.air_date = air_date;
-        this.seen = seen;
-        this.season = season;
-    }
-
     /**
      *  Getter episode id
      * @return id

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.managers.RetrofitManager;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
+import com.eseo.allmytvshows.ui.views.TouchCheckBox;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
  * Created by Damien on 9/19/15.
  */
 public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
 
     static final int TYPE_HEADER = 0;
     static final int TYPE_CELL = 1;
@@ -44,6 +46,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @Bind({R.id.imageView_big}) ImageView coverArt;
         @Bind({R.id.textView_big}) TextView tvShowName;
         @Bind({R.id.textView2_big}) TextView tvShowDetail;
+        @Bind({R.id.checkboxBestTvShow_big}) TouchCheckBox added;
 
         TvShowBigViewHolder(View itemView) {
             super(itemView);
@@ -99,6 +102,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowBigViewHolder.coverArt);
                 tvShowBigViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
+                tvShowBigViewHolder.added.setVisibility(View.INVISIBLE);
                 break;
             case TYPE_CELL:
                 TvShowSmallViewHolder tvShowSmallViewHolder = (TvShowSmallViewHolder) viewHolder;
@@ -115,4 +119,5 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemCount() {
         return contents.size();
     }
+
 }

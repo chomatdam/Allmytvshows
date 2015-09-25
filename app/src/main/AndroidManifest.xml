@@ -24,7 +24,7 @@
             android:value="508b42cceb14f3122bfd0e5f3ec58b556271d5b8" />
 
         <activity
-            android:name=".ui.activities.SearchActivity"
+            android:name=".ui.activities.AddSpecificTvShowActivity"
             android:label="@string/title_activity_search" >
         </activity>
     </application>

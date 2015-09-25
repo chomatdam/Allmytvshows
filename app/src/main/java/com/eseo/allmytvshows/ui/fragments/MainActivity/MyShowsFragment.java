@@ -2,6 +2,8 @@ package com.eseo.allmytvshows.ui.fragments.MainActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -12,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.eseo.allmytvshows.R;
+import com.eseo.allmytvshows.dao.tvshow.ITvShowDao;
+import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
-import com.eseo.allmytvshows.ui.activities.SearchActivity;
+import com.eseo.allmytvshows.ui.activities.AddSpecificTvShowActivity;
+import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.adapters.MyShowsAdapter;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
@@ -23,12 +28,11 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 
 public class MyShowsFragment extends Fragment {
+
+    public static final int UPDATE_MY_SHOWS = 1;
 
     private static MyShowsFragment instance = null;
     @Bind(R.id.my_recycler_view)
@@ -47,6 +51,7 @@ public class MyShowsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((MainActivity)getActivity()).setmHandler(mHandler);
     }
 
     @Override
@@ -66,28 +71,43 @@ public class MyShowsFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new MyShowsAdapter(getActivity().getApplicationContext(), mContentItems));
-        mRecyclerView.setAdapter(mAdapter);
-
-        final Realm realm = Realm.getInstance(getActivity());
-        final RealmQuery<RealmTvShow> query = realm.where(RealmTvShow.class);
-        final RealmResults<RealmTvShow> myShows = query.findAll();
-
-        for (RealmTvShow show : myShows) {
+        final ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
+        for (RealmTvShow show : iTvShowDao.findAll()) {
             mContentItems.add(show);
         }
 
-        //TODO: view.getRootView() not safe ?
+        mAdapter = new RecyclerViewMaterialAdapter(new MyShowsAdapter(getActivity(), mContentItems));
+        mRecyclerView.setAdapter(mAdapter);
+
+        //TODO: view.getRootView() not safe
         mFab = ButterKnife.findById(view.getRootView(), R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), SearchActivity.class);
+                Intent intent = new Intent(getContext(), AddSpecificTvShowActivity.class);
                 startActivity(intent);
             }
         });
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(),mRecyclerView,null);
     }
+
+    private Handler mHandler = new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch(msg.what){
+                case UPDATE_MY_SHOWS:
+                    mContentItems.clear();
+                    //TODO: dangerous thing with context - listeners/EventBus
+                    ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
+                    mContentItems.addAll(iTvShowDao.findAll());
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
 }

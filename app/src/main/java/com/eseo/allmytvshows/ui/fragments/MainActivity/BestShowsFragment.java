@@ -62,7 +62,7 @@ public class BestShowsFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new BestTvShowsAdapter(getActivity().getApplicationContext(), mContentItems));
+        mAdapter = new RecyclerViewMaterialAdapter(new BestTvShowsAdapter(getActivity(), mContentItems));
         mRecyclerView.setAdapter(mAdapter);
 
         final TvShowService mTvShowService = new TvShowService(getView(), mContentItems, mAdapter);

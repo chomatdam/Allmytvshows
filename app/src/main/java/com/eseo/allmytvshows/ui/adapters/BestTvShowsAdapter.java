@@ -9,9 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eseo.allmytvshows.R;
+import com.eseo.allmytvshows.dao.tvshow.ITvShowDao;
+import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
 import com.eseo.allmytvshows.managers.RetrofitManager;
 import com.eseo.allmytvshows.managers.TvShowService;
 import com.eseo.allmytvshows.model.TvShow;
+import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.views.TouchCheckBox;
 import com.squareup.picasso.Picasso;
 
@@ -25,8 +28,8 @@ import butterknife.ButterKnife;
  */
 public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    static final int TYPE_HEADER = 0;
-    static final int TYPE_CELL = 1;
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_CELL = 1;
 
     private Context ctx;
     private List<TvShow> contents;
@@ -35,7 +38,6 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
         @Bind({R.id.textView2}) TextView tvShowDetail;
-        @Bind({R.id.checkboxBestTvShow}) TouchCheckBox added;
 
         TvShowSmallViewHolder(View itemView) {
             super(itemView);
@@ -103,20 +105,17 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowBigViewHolder.coverArt);
                 tvShowBigViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                tvShowBigViewHolder.added.setChecked(false);
+                ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity) ctx).getRealm());
+                boolean checked = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
+                tvShowBigViewHolder.added.setChecked(checked);
                 tvShowBigViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(View buttonView, boolean isChecked) {
                         if (isChecked) {
-                            //TODO: add element my tv shows
                             TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
                             tvShowService.getDataTVShow();
-                            /*
-                            Appel WS avec tvshow
-                            OnChecked, tu fais un appel WS data tvshow
-                            OnCompleted, store Realm
-                            notifyAdapter myTvShows
-                             */
+                        } else {
+                            //TODO: implement remove from DB tvshow
                         }
                     }
                 });
@@ -128,7 +127,6 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowSmallViewHolder.coverArt);
                 tvShowSmallViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                tvShowSmallViewHolder.added.setChecked(false);
                 break;
         }
     }
@@ -137,4 +135,5 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemCount() {
         return contents.size();
     }
+
 }

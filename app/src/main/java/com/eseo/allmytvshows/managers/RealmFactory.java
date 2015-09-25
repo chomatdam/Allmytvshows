@@ -1,7 +1,5 @@
 package com.eseo.allmytvshows.managers;
 
-import android.content.Context;
-
 import com.eseo.allmytvshows.model.Episode;
 import com.eseo.allmytvshows.model.Season;
 import com.eseo.allmytvshows.model.TvShow;
@@ -17,57 +15,44 @@ import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
-/**
+/** Factory where you only create Realm objects from objects returned by MovieDB API.
+ * Here we don't use Realm instance available in activities, we get another one and close it once everything is done.
  * Created by Damien on 9/24/15.
  */
 public class RealmFactory {
 
     private static Realm realm = null;
-    private static Context context = null;
     private static RealmFactory instance = null;
 
+    private RealmFactory(Realm realm) {
+        this.realm = realm;
+    }
 
-    public static RealmFactory newInstance(Context ctx) {
-        if (instance == null) {
-            instance = new RealmFactory();
-            context = ctx;
-            realm = Realm.getInstance(ctx);
+    public static RealmFactory newInstance(Realm realm) {
+        if (instance == null || realm == null) {
+            instance = new RealmFactory(realm);
         }
         return instance;
     }
 
-    public Realm getRealmInstance() {
-        if (realm == null) {
-            realm = Realm.getInstance(context);
-        }
-        return realm;
-    }
-
-    private void checkRealmInstance() {
-        if (realm == null) {
-            realm = Realm.getInstance(context);
-        }
-    }
-
 
     public long getNextKey(Class mClass) {
-        checkRealmInstance();
         long value = realm.where(mClass).maximumInt("id") + 1;
         value = (value < 1 ? 1 : value);
 
         return value;
     }
 
-    public void commitAndClose() {
-        realm.commitTransaction();
-        realm.close();
-    }
-
 
     public <T> RealmObject execute (final T object) {
+
         if (object instanceof TvShow) {
-            return toRealmTvShow((TvShow) object);
+            realm.beginTransaction();
+            RealmObject retValue = toRealmTvShow((TvShow) object);
+            realm.commitTransaction();
+            return retValue;
         }
+
         throw new IllegalArgumentException("Unsupported object type " + object);
     }
 

@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.eseo.allmytvshows.R;
 
-public class SearchActivity extends AppCompatActivity {
+public class AddSpecificTvShowActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

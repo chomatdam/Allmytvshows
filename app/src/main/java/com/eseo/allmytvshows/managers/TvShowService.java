@@ -10,6 +10,8 @@ import com.crashlytics.android.Crashlytics;
 import com.eseo.allmytvshows.model.SearchResultsPage;
 import com.eseo.allmytvshows.model.Season;
 import com.eseo.allmytvshows.model.TvShow;
+import com.eseo.allmytvshows.ui.activities.MainActivity;
+import com.eseo.allmytvshows.ui.fragments.MainActivity.MyShowsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,11 +109,11 @@ public class TvShowService {
                     .getService()
                             //get TvShow with empty seasons
                     .getDataTVShow(mContentItems.get(0).getId(), MovieDbService.API_KEY)
-                    //Observable because we have an asynchronous task to do
+                    //Observable because we have an asynchronous task to do (map = object -> object ;  flatmap = object -> Observable<?>)
                     .flatMap(new Func1<TvShow, Observable<TvShow>>() {
                         @Override
                         public Observable<TvShow> call(final TvShow tvShow) {
-                            // I think 'from', you deal with objects sequentially / 'just', you work with a list
+                            //'from', you deal with objects sequentially / 'just', you work with a list
                             return Observable.from(tvShow.getSeasons())
                                     .flatMap(new Func1<Season, Observable<Season>>() {
                                         @Override
@@ -152,10 +154,10 @@ public class TvShowService {
                     .subscribe(new Action1<TvShow>() {
                         @Override
                         public void call(TvShow tvShow) {
-                            final RealmFactory realmFactory = RealmFactory.newInstance(ctx);
-                            realmFactory.getRealmInstance().beginTransaction();
-                            RealmFactory.newInstance(ctx).execute(tvShow);
-                            realmFactory.commitAndClose();
+                            final RealmFactory realmFactory = RealmFactory.newInstance(((MainActivity)ctx).getRealm());
+                            realmFactory.execute(tvShow);
+                            //TODO: dangerous thing with context - listeners/EventBus
+                            ((MainActivity)ctx).getmHandler().sendEmptyMessage(MyShowsFragment.UPDATE_MY_SHOWS);
                         }
                     });
 

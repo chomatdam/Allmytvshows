@@ -22,17 +22,6 @@ public class RealmTvShow extends RealmObject {
     public RealmTvShow() {
     }
 
-    public RealmTvShow(long id, long id_moviedb, String original_name, String poster_path,
-                       String nextEpisode, String overview, RealmList<RealmSeason> seasons) {
-        this.id = id;
-        this.id_moviedb = id_moviedb;
-        this.original_name = original_name;
-        this.poster_path = poster_path;
-        this.nextEpisode = nextEpisode;
-        this.overview = overview;
-        this.seasons = seasons;
-    }
-
     public long getId() {
         return id;
     }

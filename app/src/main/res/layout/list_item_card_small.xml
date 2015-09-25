@@ -33,17 +33,14 @@
             android:text="Large Text"
             android:id="@+id/textView"
             android:layout_above="@+id/anchor"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_toLeftOf="@+id/checkboxBestTvShow"
-            />
+            android:layout_toEndOf="@+id/imageView" />
 
         <View
             android:id="@+id/anchor"
             android:layout_height="0dp"
             android:layout_width="wrap_content"
             android:layout_toEndOf="@id/imageView"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/checkboxBestTvShow"/>
+            android:layout_centerVertical="true" />
 
         <TextView
             android:paddingTop="5dp"
@@ -53,15 +50,8 @@
             android:text="Medium Text"
             android:id="@+id/textView2"
             android:layout_below="@+id/anchor"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_toLeftOf="@+id/checkboxBestTvShow"/>
+            android:layout_toEndOf="@+id/imageView" />
 
-        <com.eseo.allmytvshows.ui.views.TouchCheckBox
-            android:id="@+id/checkboxBestTvShow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true" />
 
     </RelativeLayout>
 
