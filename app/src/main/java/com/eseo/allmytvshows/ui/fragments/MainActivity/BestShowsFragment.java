@@ -71,4 +71,5 @@ public class BestShowsFragment extends Fragment {
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
+
 }

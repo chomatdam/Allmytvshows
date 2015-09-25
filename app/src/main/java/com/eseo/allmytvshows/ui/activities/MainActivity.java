@@ -15,7 +15,6 @@ import android.view.View;
 import com.crashlytics.android.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.eseo.allmytvshows.R;
-import com.eseo.allmytvshows.model.realm.RealmTvShow;
 import com.eseo.allmytvshows.ui.fragments.MainActivity.BestShowsFragment;
 import com.eseo.allmytvshows.ui.fragments.MainActivity.MyShowsFragment;
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -49,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         realm = Realm.getInstance(this);
 
-        realm.beginTransaction();
-        realm.where(RealmTvShow.class).findAll().clear();
-        realm.commitTransaction();
+//        realm.beginTransaction();
+//        realm.where(RealmTvShow.class).findAll().clear();
+//        realm.commitTransaction();
 
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
                         return getString(R.string.tabTwo);
                 }
                 return "";
-        }
-    });
+            }
+        });
 
     mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
         @Override
@@ -115,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
     mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
 
     View logo = findViewById(R.id.logo_white);
 

@@ -16,12 +16,15 @@ import android.view.ViewGroup;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.dao.tvshow.ITvShowDao;
 import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
+import com.eseo.allmytvshows.managers.AppApplication;
+import com.eseo.allmytvshows.model.Data;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
 import com.eseo.allmytvshows.ui.activities.AddSpecificTvShowActivity;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.adapters.MyShowsAdapter;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +55,7 @@ public class MyShowsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MainActivity)getActivity()).setmHandler(mHandler);
+        AppApplication.getBus().register(this);
     }
 
     @Override
@@ -89,9 +93,34 @@ public class MyShowsFragment extends Fragment {
             }
         });
 
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(),mRecyclerView,null);
+        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
+    @Subscribe
+    public void getMessage(Data data) {
+        if (data.getKey() == Data.NOTIFY_MY_SHOWS_ADAPTER) {
+            final long realmIdToRemove = data.getLongValue();
+            boolean removed = false;
+            int i = 0;
+            do {
+                if (mContentItems.get(i).getId() == realmIdToRemove) {
+                    mContentItems.remove(i);
+                    removed = true;
+                }
+                i++;
+            } while (i < mContentItems.size() || !removed);
+
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        AppApplication.getBus().unregister(this);
+    }
+
+    //TODO: to replace by Otto
     private Handler mHandler = new Handler(){
 
         @Override

@@ -35,6 +35,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
         @Bind({R.id.textView2}) TextView tvShowDetail;
+        @Bind({R.id.checkboxBestTvShow}) TouchCheckBox added;
 
         TvShowSmallViewHolder(View itemView) {
             super(itemView);
@@ -111,6 +112,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowSmallViewHolder.coverArt);
                 tvShowSmallViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
+                tvShowSmallViewHolder.added.setVisibility(View.INVISIBLE);
                 break;
         }
     }

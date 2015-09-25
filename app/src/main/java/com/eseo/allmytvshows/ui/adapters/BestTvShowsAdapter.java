@@ -11,9 +11,12 @@ import android.widget.TextView;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.dao.tvshow.ITvShowDao;
 import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
+import com.eseo.allmytvshows.managers.AppApplication;
 import com.eseo.allmytvshows.managers.RetrofitManager;
 import com.eseo.allmytvshows.managers.TvShowService;
+import com.eseo.allmytvshows.model.Data;
 import com.eseo.allmytvshows.model.TvShow;
+import com.eseo.allmytvshows.model.realm.RealmTvShow;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.views.TouchCheckBox;
 import com.squareup.picasso.Picasso;
@@ -38,6 +41,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
         @Bind({R.id.textView2}) TextView tvShowDetail;
+        @Bind({R.id.checkboxBestTvShow}) TouchCheckBox added;
 
         TvShowSmallViewHolder(View itemView) {
             super(itemView);
@@ -58,6 +62,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public BestTvShowsAdapter(final Context ctx, final List<TvShow> contents) {
+        AppApplication.getBus().register(this);
         this.ctx = ctx;
         this.contents = contents;
     }
@@ -71,6 +76,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 return TYPE_CELL;
         }
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -96,7 +102,8 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
-
+        final ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity) ctx).getRealm());
+        final boolean tvShowStored = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
         switch (getItemViewType(i)) {
             case TYPE_HEADER:
                 TvShowBigViewHolder tvShowBigViewHolder = (TvShowBigViewHolder) viewHolder;
@@ -105,20 +112,27 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowBigViewHolder.coverArt);
                 tvShowBigViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity) ctx).getRealm());
-                boolean checked = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
-                tvShowBigViewHolder.added.setChecked(checked);
+                //TODO: duplicated code (1)
+                tvShowBigViewHolder.added.setChecked(tvShowStored);
                 tvShowBigViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(View buttonView, boolean isChecked) {
+                        final boolean  tvShowStoredOnChanged = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
                         if (isChecked) {
                             TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
-                            tvShowService.getDataTVShow();
+                            if (!tvShowStoredOnChanged) {
+                                tvShowService.getDataTVShow();
+                            }
                         } else {
-                            //TODO: implement remove from DB tvshow
+                            if (tvShowStoredOnChanged) {
+                                RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
+                                AppApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
+                                iTvShowDao.remove(realmTvShow);
+                            }
                         }
                     }
                 });
+                //TODO: until here (1)
                 break;
             case TYPE_CELL:
                 TvShowSmallViewHolder tvShowSmallViewHolder = (TvShowSmallViewHolder) viewHolder;
@@ -127,6 +141,26 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowSmallViewHolder.coverArt);
                 tvShowSmallViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
+                //TODO: duplicated code (2)
+                tvShowSmallViewHolder.added.setChecked(tvShowStored);
+                tvShowSmallViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(View buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
+                            if (!tvShowStored) {
+                                tvShowService.getDataTVShow();
+                            }
+                        } else {
+                            if (tvShowStored) {
+                                RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
+                                AppApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
+                                iTvShowDao.remove(realmTvShow);
+                            }
+                        }
+                    }
+                });
+                //TODO: until here (2)
                 break;
         }
     }

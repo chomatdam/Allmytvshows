@@ -102,7 +102,7 @@ public class RealmFactory {
         for (Episode clazz : clazzList) {
             RealmEpisode realmEpisode = realm.createObject(RealmEpisode.class);
             realmEpisode.setId(idValue++);
-            realmEpisode.setAir_date(clazz.getAir_date());
+            realmEpisode.setAir_date((clazz.getAir_date() == null ? "Air date not known" : clazz.getAir_date()));
             realmEpisode.setName(clazz.getName());
             realmEpisode.setSeen(false);
             realmEpisode.setSeason(realmSeason);
