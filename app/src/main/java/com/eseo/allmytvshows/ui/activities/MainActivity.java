@@ -1,7 +1,6 @@
 package com.eseo.allmytvshows.ui.activities;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -27,7 +26,6 @@ import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Handler mHandler;
     private Realm realm;
     private Toolbar toolbar;
 
@@ -161,14 +159,6 @@ public class MainActivity extends AppCompatActivity {
 
     public Realm getRealm() {
         return realm;
-    }
-
-    public Handler getmHandler() {
-        return mHandler;
-    }
-
-    public void setmHandler(Handler mHandler) {
-        this.mHandler = mHandler;
     }
 
 }

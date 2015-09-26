@@ -62,6 +62,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public BestTvShowsAdapter(final Context ctx, final List<TvShow> contents) {
+        //TODO: find a way to unregister from bus in this class
         AppApplication.getBus().register(this);
         this.ctx = ctx;
         this.contents = contents;
@@ -153,9 +154,11 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             }
                         } else {
                             if (tvShowStored) {
-                                RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
-                                AppApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
-                                iTvShowDao.remove(realmTvShow);
+                                final RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
+                                if (realmTvShow != null) {
+                                    AppApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
+                                    iTvShowDao.remove(realmTvShow);
+                                }
                             }
                         }
                     }

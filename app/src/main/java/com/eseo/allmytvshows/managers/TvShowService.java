@@ -7,11 +7,11 @@ import android.util.Log;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.eseo.allmytvshows.model.Data;
 import com.eseo.allmytvshows.model.SearchResultsPage;
 import com.eseo.allmytvshows.model.Season;
 import com.eseo.allmytvshows.model.TvShow;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
-import com.eseo.allmytvshows.ui.fragments.MainActivity.MyShowsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +51,7 @@ public class TvShowService {
      * @param item
      */
     public TvShowService(Context c, View v, TvShow item) {
+        AppApplication.getBus().register(this);
         this.ctx = c;
         this.v = v;
         mContentItems.add(item);
@@ -64,6 +65,7 @@ public class TvShowService {
      * @param adapter
      */
     public TvShowService(View v, List<TvShow> mContentItems, RecyclerView.Adapter adapter) {
+        AppApplication.getBus().register(this);
         this.v = v;
         this.mContentItems = mContentItems;
         this.mAdapter = adapter;
@@ -156,8 +158,8 @@ public class TvShowService {
                         public void call(TvShow tvShow) {
                             final RealmFactory realmFactory = RealmFactory.newInstance(((MainActivity)ctx).getRealm());
                             realmFactory.execute(tvShow);
-                            //TODO: dangerous thing with context - listeners/EventBus
-                            ((MainActivity)ctx).getmHandler().sendEmptyMessage(MyShowsFragment.UPDATE_MY_SHOWS);
+                            //TODO: find a way to unregister from bus in this class
+                            AppApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER));
                         }
                     });
 

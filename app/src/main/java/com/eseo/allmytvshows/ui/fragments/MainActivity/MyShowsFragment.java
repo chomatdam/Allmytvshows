@@ -2,8 +2,6 @@ package com.eseo.allmytvshows.ui.fragments.MainActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -54,7 +52,6 @@ public class MyShowsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity)getActivity()).setmHandler(mHandler);
         AppApplication.getBus().register(this);
     }
 
@@ -111,6 +108,12 @@ public class MyShowsFragment extends Fragment {
             } while (i < mContentItems.size() || !removed);
 
             mAdapter.notifyDataSetChanged();
+        } else if (data.getKey() == Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER) {
+            mContentItems.clear();
+            //TODO: dangerous thing with context - listeners/EventBus
+            ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
+            mContentItems.addAll(iTvShowDao.findAll());
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -119,24 +122,5 @@ public class MyShowsFragment extends Fragment {
         super.onDestroy();
         AppApplication.getBus().unregister(this);
     }
-
-    //TODO: to replace by Otto
-    private Handler mHandler = new Handler(){
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch(msg.what){
-                case UPDATE_MY_SHOWS:
-                    mContentItems.clear();
-                    //TODO: dangerous thing with context - listeners/EventBus
-                    ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
-                    mContentItems.addAll(iTvShowDao.findAll());
-                    mAdapter.notifyDataSetChanged();
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
 }
