@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,6 @@ import com.eseo.allmytvshows.model.realm.RealmTvShow;
 import com.eseo.allmytvshows.ui.activities.AddSpecificTvShowActivity;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.adapters.MyShowsAdapter;
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -33,9 +30,10 @@ import butterknife.ButterKnife;
 
 public class MyShowsFragment extends Fragment {
 
-    public static final int UPDATE_MY_SHOWS = 1;
+    static final String LOG_TAG = "MyShowsFragment";
 
-    private static MyShowsFragment instance = null;
+    private static MyShowsFragment instance;
+
     @Bind(R.id.my_recycler_view)
     public RecyclerView mRecyclerView;
     public FloatingActionButton mFab;
@@ -44,7 +42,7 @@ public class MyShowsFragment extends Fragment {
 
     public static MyShowsFragment newInstance() {
         if (instance == null) {
-            return new MyShowsFragment();
+            instance = new MyShowsFragment();
         }
         return instance;
     }
@@ -68,16 +66,12 @@ public class MyShowsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-
         final ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
         for (RealmTvShow show : iTvShowDao.findAll()) {
             mContentItems.add(show);
         }
 
-        mAdapter = new RecyclerViewMaterialAdapter(new MyShowsAdapter(getActivity(), mContentItems));
+        mAdapter = new MyShowsAdapter(getActivity(), mContentItems);
         mRecyclerView.setAdapter(mAdapter);
 
         //TODO: view.getRootView() not safe
@@ -90,7 +84,6 @@ public class MyShowsFragment extends Fragment {
             }
         });
 
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
     @Subscribe

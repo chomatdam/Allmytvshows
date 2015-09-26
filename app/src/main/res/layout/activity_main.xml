@@ -6,26 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.github.florent37.materialviewpager.MaterialViewPager
-        android:id="@+id/materialViewPager"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/primary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:viewpager_logo="@layout/header_logo"
-        app:viewpager_logoMarginTop="70dp"
-        app:viewpager_color="@color/primary"
-        app:viewpager_headerHeight="150dp"
-        app:viewpager_headerAlpha="1.0"
-        app:viewpager_hideLogoWithFade="false"
-        app:viewpager_parallaxHeaderFactor="1.5"
-        app:viewpager_headerAdditionalHeight="20dp"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.Toolbar>
 
-        app:viewpager_animatedHeaderImage="true"
-
-        app:viewpager_disableToolbar="true"
-        app:viewpager_transparentToolbar="true"
-        app:viewpager_hideToolbarAndTitle="true"
-        app:viewpager_displayToolbarWhenSwipe="false"
-        />
+    <FrameLayout android:id="@+id/fragment_placeholder" android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -34,7 +25,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@+mipmap/ic_add_white_24dp"
-        app:layout_anchor="@+id/materialViewPager"
+        app:layout_anchor="@+id/fragment_placeholder"
         app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -13,8 +13,6 @@ import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.managers.TvShowService;
 import com.eseo.allmytvshows.model.TvShow;
 import com.eseo.allmytvshows.ui.adapters.BestTvShowsAdapter;
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +25,17 @@ import butterknife.ButterKnife;
  */
 public class BestShowsFragment extends Fragment {
 
-    private static BestShowsFragment instance = null;
+    private static BestShowsFragment instance;
+
     @Bind(R.id.my_recycler_view)
     public RecyclerView mRecyclerView;
+
     private RecyclerView.Adapter mAdapter;
     private List<TvShow> mContentItems = new ArrayList<>();
 
     public static BestShowsFragment newInstance() {
         if (instance == null) {
-            return new BestShowsFragment();
+            instance = new BestShowsFragment();
         }
         return instance;
     }
@@ -62,14 +62,12 @@ public class BestShowsFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new BestTvShowsAdapter(getActivity(), mContentItems));
+        mAdapter = new BestTvShowsAdapter(getActivity(), mContentItems);
         mRecyclerView.setAdapter(mAdapter);
 
         final TvShowService mTvShowService = new TvShowService(getView(), mContentItems, mAdapter);
         mTvShowService.getPopularTvShows();
 
-
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 
 }

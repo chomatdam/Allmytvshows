@@ -20,8 +20,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Action2;
-import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -128,17 +126,18 @@ public class TvShowService {
                                         }
                                     })
                                             //With WS callback, we will store inside an ArrayList the result (container, action to add object to the container)
-                                    .collect(new Func0<List<Season>>() {
-                                        @Override
-                                        public List<Season> call() {
-                                            return new ArrayList<Season>();
-                                        }
-                                    }, new Action2<List<Season>, Season>() {
-                                        @Override
-                                        public void call(List<Season> seasons, Season season) {
-                                            seasons.add(season);
-                                        }
-                                    })
+//                                    .collect(new Func0<List<Season>>() {
+//                                        @Override
+//                                        public List<Season> call() {
+//                                            return new ArrayList<Season>();
+//                                        }
+//                                    }, new Action2<List<Season>, Season>() {
+//                                        @Override
+//                                        public void call(List<Season> seasons, Season season) {
+//                                            seasons.add(season);
+//                                        }
+//                                    })
+                                    .toList() // same  thing as collect
                                             //we were working on List<Season> so now we go back to a TvShow object
                                     .map(new Func1<List<Season>, TvShow>() {
                                         @Override

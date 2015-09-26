@@ -41,9 +41,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:design:23.0.1'
-    compile('com.github.florent37:materialviewpager:1.1.2@aar') {
-        transitive = true
-    }
+    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta1'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta1'
     compile 'io.reactivex:rxjava:1.0.14'
