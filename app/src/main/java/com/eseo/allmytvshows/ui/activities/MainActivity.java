@@ -2,8 +2,9 @@ package com.eseo.allmytvshows.ui.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,22 +12,31 @@ import com.crashlytics.android.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
-import com.eseo.allmytvshows.ui.fragments.AppPagerFragment;
+import com.eseo.allmytvshows.ui.adapters.AppPagerAdapter;
+import com.eseo.allmytvshows.ui.views.SlidingTabLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = "MainActivity";
 
     private Realm realm;
 
+    @Bind(R.id.toolbar)
+    public Toolbar toolbar;
+
     @Bind(R.id.fab)
     public FloatingActionButton fab;
 
+    @Bind(R.id.sliding_tabs)
+    public SlidingTabLayout mSlidingTabLayout;
+
+    @Bind(R.id.viewpager)
+    public ViewPager mViewPager;
 
 
     @Override
@@ -36,22 +46,17 @@ public class MainActivity extends FragmentActivity {
         ButterKnife.bind(this);
         realm = Realm.getInstance(this);
 
-        clearDatabase(realm);
+        setSupportActionBar(toolbar);
 
+        clearDatabase(realm);
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
         }
 
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            AppPagerFragment fragment = new AppPagerFragment();
-            transaction.replace(R.id.fragment_placeholder, fragment);
-            transaction.commit();
-        }
+        mViewPager.setAdapter(new AppPagerAdapter(this));
+        mSlidingTabLayout.setViewPager(mViewPager);
 
     }
-
-
 
     @Override
     public void onResume() {

@@ -2,9 +2,8 @@ package com.eseo.allmytvshows.ui.adapters;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.eseo.allmytvshows.R;
@@ -18,8 +17,8 @@ public class AppPagerAdapter extends FragmentPagerAdapter {
 
     private Activity activity;
 
-    public AppPagerAdapter(FragmentManager fm, FragmentActivity activity) {
-        super(fm);
+    public AppPagerAdapter(AppCompatActivity activity) {
+        super(activity.getSupportFragmentManager());
         this.activity = activity;
     }
 
