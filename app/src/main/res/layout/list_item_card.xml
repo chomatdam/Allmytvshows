@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view_big"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="80dp"
     android:layout_margin="5dp"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp"
@@ -12,14 +12,14 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent" android:layout_height="match_parent"
-        android:id="@+id/bestTvShowsLayout_big"
+        android:id="@+id/bestTvShowsLayout"
         android:padding="5dp">
 
         <ImageView
             android:layout_width="100dp"
             android:layout_height="match_parent"
             android:padding="5dp"
-            android:id="@+id/imageView_big"
+            android:id="@+id/imageView"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"/>
 
@@ -28,19 +28,19 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:text="Large Text"
-            android:id="@+id/textView_big"
-            android:layout_above="@+id/anchor_big"
-            android:layout_toEndOf="@+id/imageView_big"
-            android:layout_toLeftOf="@+id/checkboxBestTvShow_big"
+            android:id="@+id/textView"
+            android:layout_above="@+id/anchor"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_toLeftOf="@+id/checkboxBestTvShow"
             />
 
         <View
-            android:id="@+id/anchor_big"
+            android:id="@+id/anchor"
             android:layout_height="0dp"
             android:layout_width="wrap_content"
-            android:layout_toEndOf="@id/imageView_big"
+            android:layout_toEndOf="@id/imageView"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/checkboxBestTvShow_big"/>
+            android:layout_toLeftOf="@+id/checkboxBestTvShow"/>
 
         <TextView
             android:paddingTop="5dp"
@@ -48,15 +48,15 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:text="Medium Text"
-            android:id="@+id/textView2_big"
-            android:layout_below="@+id/anchor_big"
-            android:layout_toEndOf="@+id/imageView_big"
-            android:layout_toLeftOf="@+id/checkboxBestTvShow_big"/>
+            android:id="@+id/textView2"
+            android:layout_below="@+id/anchor"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_toLeftOf="@+id/checkboxBestTvShow"/>
 
         <com.eseo.allmytvshows.ui.views.TouchCheckBox
-            android:id="@+id/checkboxBestTvShow_big"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/checkboxBestTvShow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true" />
 

@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.dao.tvshow.ITvShowDao;
 import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
-import com.eseo.allmytvshows.managers.AppApplication;
+import com.eseo.allmytvshows.managers.TvShowApplication;
 import com.eseo.allmytvshows.managers.RetrofitManager;
 import com.eseo.allmytvshows.managers.TvShowService;
 import com.eseo.allmytvshows.model.Data;
@@ -31,31 +32,21 @@ import butterknife.ButterKnife;
  */
 public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+    static final String LOG_TAG = "BestTvShowsAdapter";
+
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_CELL = 1;
 
     private Context ctx;
     private List<TvShow> contents;
 
-    public static class TvShowSmallViewHolder extends RecyclerView.ViewHolder {
+    public static class TvShowViewHolder extends RecyclerView.ViewHolder {
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
         @Bind({R.id.textView2}) TextView tvShowDetail;
         @Bind({R.id.checkboxBestTvShow}) TouchCheckBox added;
 
-        TvShowSmallViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
-    public static class TvShowBigViewHolder extends RecyclerView.ViewHolder {
-        @Bind({R.id.imageView_big}) ImageView coverArt;
-        @Bind({R.id.textView_big}) TextView tvShowName;
-        @Bind({R.id.textView2_big}) TextView tvShowDetail;
-        @Bind({R.id.checkboxBestTvShow_big}) TouchCheckBox added;
-
-        TvShowBigViewHolder(View itemView) {
+        TvShowViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -63,7 +54,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public BestTvShowsAdapter(final Context ctx, final List<TvShow> contents) {
         //TODO: find a way to unregister from bus in this class
-        AppApplication.getBus().register(this);
+        TvShowApplication.getBus().register(this);
         this.ctx = ctx;
         this.contents = contents;
     }
@@ -72,7 +63,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         switch (position) {
             case 0:
-                return TYPE_HEADER;
+                return TYPE_CELL /* TYPE_HEADER */;
             default:
                 return TYPE_CELL;
         }
@@ -85,15 +76,12 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch (viewType) {
             case TYPE_HEADER: {
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_item_card_big, parent, false);
-                return new TvShowBigViewHolder(view) {
-                };
+                break;
             }
             case TYPE_CELL: {
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_item_card_small, parent, false);
-                return new TvShowSmallViewHolder(view) {
+                        .inflate(R.layout.list_item_card, parent, false);
+                return new TvShowViewHolder(view) {
                 };
             }
         }
@@ -107,66 +95,68 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         final boolean tvShowStored = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
         switch (getItemViewType(i)) {
             case TYPE_HEADER:
-                TvShowBigViewHolder tvShowBigViewHolder = (TvShowBigViewHolder) viewHolder;
-                tvShowBigViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
-                Picasso .with(ctx)
-                        .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
-                        .into(tvShowBigViewHolder.coverArt);
-                tvShowBigViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                //TODO: duplicated code (1)
-                tvShowBigViewHolder.added.setChecked(tvShowStored);
-                tvShowBigViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(View buttonView, boolean isChecked) {
-                        final boolean  tvShowStoredOnChanged = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
-                        if (isChecked) {
-                            TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
-                            if (!tvShowStoredOnChanged) {
-                                tvShowService.getDataTVShow();
-                            }
-                        } else {
-                            if (tvShowStoredOnChanged) {
-                                RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
-                                AppApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
-                                iTvShowDao.remove(realmTvShow);
-                            }
-                        }
-                    }
-                });
-                //TODO: until here (1)
                 break;
             case TYPE_CELL:
-                TvShowSmallViewHolder tvShowSmallViewHolder = (TvShowSmallViewHolder) viewHolder;
-                tvShowSmallViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
+                TvShowViewHolder tvShowViewHolder = (TvShowViewHolder) viewHolder;
+                tvShowViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
                 Picasso .with(ctx)
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
-                        .into(tvShowSmallViewHolder.coverArt);
-                tvShowSmallViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                //TODO: duplicated code (2)
-                tvShowSmallViewHolder.added.setChecked(tvShowStored);
-                tvShowSmallViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
+                        .into(tvShowViewHolder.coverArt);
+                tvShowViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
+                tvShowViewHolder.added.setChecked(tvShowStored);
+                tvShowViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(View buttonView, boolean isChecked) {
+                    public void onCheckedChanged(final View buttonView, boolean isChecked) {
                         if (isChecked) {
-                            TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
-                            if (!tvShowStored) {
-                                tvShowService.getDataTVShow();
-                            }
+                            addTvShow(buttonView);
                         } else {
-                            if (tvShowStored) {
-                                final RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
-                                if (realmTvShow != null) {
-                                    AppApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
-                                    iTvShowDao.remove(realmTvShow);
-                                }
-                            }
+                            removeTvShow();
                         }
                     }
+
+                    private void addTvShow(final View buttonView) {
+                        new MaterialDialog.Builder(ctx)
+                                .title("Add a new TV show")
+                                .callback(new MaterialDialog.ButtonCallback() {
+                                    @Override
+                                    public void onPositive(MaterialDialog dialog) {
+                                        super.onPositive(dialog);
+                                        if (!tvShowStored) {
+                                            TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
+                                            tvShowService.getDataTVShow();
+                                        }
+                                    }
+                                })
+                                .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorites shows ?")
+                                .positiveText("Continue")
+                                .negativeText("Abort")
+                                .show();
+                    }
+
+                    private void removeTvShow() {
+                        new MaterialDialog.Builder(ctx)
+                                .title("Remove this TV show")
+                                .callback(new MaterialDialog.ButtonCallback() {
+                                    @Override
+                                    public void onPositive(MaterialDialog dialog) {
+                                        super.onPositive(dialog);
+                                        if (tvShowStored) {
+                                            final RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
+                                            if (realmTvShow != null) {
+                                                TvShowApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
+                                                iTvShowDao.remove(realmTvShow);
+                                            }
+                                        }
+                                    }
+                                })
+                                .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorites shows ?")
+                                .positiveText("Continue")
+                                .negativeText("Abort")
+                                .show();
+                    }
                 });
-                //TODO: until here (2)
-                break;
+            }
         }
-    }
 
     @Override
     public int getItemCount() {

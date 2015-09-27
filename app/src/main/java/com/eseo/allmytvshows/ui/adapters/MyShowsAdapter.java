@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
  */
 public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+    static final String LOG_TAG = "MyShowsAdapter";
 
     static final int TYPE_HEADER = 0;
     static final int TYPE_CELL = 1;
@@ -31,25 +32,13 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context ctx;
     private List<RealmTvShow> contents;
 
-    public static class TvShowSmallViewHolder extends RecyclerView.ViewHolder {
+    public static class TvShowViewHolder extends RecyclerView.ViewHolder {
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
         @Bind({R.id.textView2}) TextView tvShowDetail;
         @Bind({R.id.checkboxBestTvShow}) TouchCheckBox added;
 
-        TvShowSmallViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
-
-    public static class TvShowBigViewHolder extends RecyclerView.ViewHolder {
-        @Bind({R.id.imageView_big}) ImageView coverArt;
-        @Bind({R.id.textView_big}) TextView tvShowName;
-        @Bind({R.id.textView2_big}) TextView tvShowDetail;
-        @Bind({R.id.checkboxBestTvShow_big}) TouchCheckBox added;
-
-        TvShowBigViewHolder(View itemView) {
+        TvShowViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
@@ -64,7 +53,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemViewType(int position) {
         switch (position) {
             case 0:
-                return TYPE_HEADER;
+                return TYPE_CELL /* TYPE_HEADER */;
             default:
                 return TYPE_CELL;
         }
@@ -76,15 +65,12 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         switch (viewType) {
             case TYPE_HEADER: {
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_item_card_big, parent, false);
-                return new TvShowBigViewHolder(view) {
-                };
+                break;
             }
             case TYPE_CELL: {
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_item_card_small, parent, false);
-                return new TvShowSmallViewHolder(view) {
+                        .inflate(R.layout.list_item_card, parent, false);
+                return new TvShowViewHolder(view) {
                 };
             }
         }
@@ -97,22 +83,15 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         switch (getItemViewType(i)) {
             case TYPE_HEADER:
-                TvShowBigViewHolder tvShowBigViewHolder = (TvShowBigViewHolder) viewHolder;
-                tvShowBigViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
-                Picasso .with(ctx)
-                        .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
-                        .into(tvShowBigViewHolder.coverArt);
-                tvShowBigViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                tvShowBigViewHolder.added.setVisibility(View.INVISIBLE);
                 break;
             case TYPE_CELL:
-                TvShowSmallViewHolder tvShowSmallViewHolder = (TvShowSmallViewHolder) viewHolder;
-                tvShowSmallViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
+                TvShowViewHolder tvShowViewHolder = (TvShowViewHolder) viewHolder;
+                tvShowViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
                 Picasso .with(ctx)
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
-                        .into(tvShowSmallViewHolder.coverArt);
-                tvShowSmallViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                tvShowSmallViewHolder.added.setVisibility(View.INVISIBLE);
+                        .into(tvShowViewHolder.coverArt);
+                tvShowViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
+                tvShowViewHolder.added.setVisibility(View.INVISIBLE);
                 break;
         }
     }

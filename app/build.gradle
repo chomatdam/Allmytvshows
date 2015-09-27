@@ -12,6 +12,7 @@ apply plugin: 'io.fabric'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 android {
@@ -56,6 +57,11 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'org.apache.commons:commons-collections4:4.0'
     compile 'com.squareup:otto:1.3.8'
+    compile 'com.miguelcatalan:materialsearchview:1.0.0'
+    compile 'io.karim:materialtabs:2.0.2'
+    compile('com.afollestad.material-dialogs:core:0.8.1.0@aar') {
+        transitive = true
+    }
 }
 
 

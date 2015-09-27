@@ -8,9 +8,9 @@ import com.squareup.otto.ThreadEnforcer;
 /**
  * Created by Damien on 9/25/15.
  */
-public class AppApplication extends Application {
+public class TvShowApplication extends Application {
 
-    private static AppApplication sInstance;
+    private static TvShowApplication sInstance;
 
     public static Bus bus = new Bus(ThreadEnforcer.MAIN);
 
@@ -19,7 +19,7 @@ public class AppApplication extends Application {
         super.onCreate();
     }
 
-    public static AppApplication getInstance() {
+    public static TvShowApplication getInstance() {
         return sInstance;
     }
 

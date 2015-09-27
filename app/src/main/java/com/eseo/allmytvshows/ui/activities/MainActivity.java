@@ -1,7 +1,6 @@
 package com.eseo.allmytvshows.ui.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,12 +11,13 @@ import com.crashlytics.android.BuildConfig;
 import com.crashlytics.android.Crashlytics;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
-import com.eseo.allmytvshows.ui.adapters.AppPagerAdapter;
-import com.eseo.allmytvshows.ui.views.SlidingTabLayout;
+import com.eseo.allmytvshows.ui.adapters.TvShowPagerAdapter;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+import io.karim.MaterialTabs;
 import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     public Toolbar toolbar;
 
-    @Bind(R.id.fab)
-    public FloatingActionButton fab;
+    @Bind(R.id.material_tabs)
+    public MaterialTabs materialTabs;
 
-    @Bind(R.id.sliding_tabs)
-    public SlidingTabLayout mSlidingTabLayout;
+    @Bind(R.id.search_view)
+    public MaterialSearchView searchView;
 
     @Bind(R.id.viewpager)
     public ViewPager mViewPager;
@@ -53,26 +53,19 @@ public class MainActivity extends AppCompatActivity {
             Fabric.with(this, new Crashlytics());
         }
 
-        mViewPager.setAdapter(new AppPagerAdapter(this));
-        mSlidingTabLayout.setViewPager(mViewPager);
+        mViewPager.setAdapter(new TvShowPagerAdapter(this));
+        materialTabs.setViewPager(mViewPager);
 
-    }
+        onPrepareSearchView();
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        realm = Realm.getInstance(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        realm.close();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
         return true;
     }
 
@@ -89,14 +82,48 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public Realm getRealm() {
-        return realm;
-    }
-
     private static void clearDatabase(Realm realm) {
         realm.beginTransaction();
         realm.where(RealmTvShow.class).findAll().clear();
         realm.commitTransaction();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
+
+    public void onPrepareSearchView() {
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Do some magic
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+            }
+        });
+    }
+
+    public Realm getRealm() {
+        return realm;
     }
 
 }

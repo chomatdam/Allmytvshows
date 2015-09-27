@@ -3,5 +3,6 @@
     <string name="action_search">Recherche</string>
     <string name="tabOne">Mes séries</string>
     <string name="tabTwo">Top séries</string>
+    <string name="app_name">Suivi séries</string>
 
 </resources>

@@ -18,18 +18,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.eseo.allmytvshows.ui.views.SlidingTabLayout
-            android:id="@+id/sliding_tabs"
+        <io.karim.MaterialTabs
+            android:id="@+id/material_tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar" />
+            android:layout_height="48dp"
+            android:background="?attr/colorPrimary"
+            app:mtSameWeightTabs="true"
+            app:mtPaddingMiddle="false"
+            android:layout_below="@+id/toolbar"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"
-            android:background="@android:color/white" />
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_below="@id/material_tabs"/>
+
+        <com.miguelcatalan.materialsearchview.MaterialSearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton

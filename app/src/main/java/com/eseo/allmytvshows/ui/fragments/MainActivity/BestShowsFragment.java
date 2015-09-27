@@ -2,8 +2,8 @@ package com.eseo.allmytvshows.ui.fragments.MainActivity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,20 +25,13 @@ import butterknife.ButterKnife;
  */
 public class BestShowsFragment extends Fragment {
 
-    private static BestShowsFragment instance;
+    static final String LOG_TAG = "BestShowsFragment";
 
     @Bind(R.id.my_recycler_view)
     public RecyclerView mRecyclerView;
-
     private RecyclerView.Adapter mAdapter;
     private List<TvShow> mContentItems = new ArrayList<>();
-
-    public static BestShowsFragment newInstance() {
-        if (instance == null) {
-            instance = new BestShowsFragment();
-        }
-        return instance;
-    }
+    public FloatingActionButton mFab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,15 +51,16 @@ public class BestShowsFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-
         mAdapter = new BestTvShowsAdapter(getActivity(), mContentItems);
         mRecyclerView.setAdapter(mAdapter);
 
         final TvShowService mTvShowService = new TvShowService(getView(), mContentItems, mAdapter);
         mTvShowService.getPopularTvShows();
+
+        //TODO: view.getRootView() not safe
+        mFab = ButterKnife.findById(view.getRootView(), R.id.fab);
+        mFab.hide();
+
 
     }
 

@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.dao.tvshow.ITvShowDao;
 import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
-import com.eseo.allmytvshows.managers.AppApplication;
+import com.eseo.allmytvshows.managers.TvShowApplication;
 import com.eseo.allmytvshows.model.Data;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
-import com.eseo.allmytvshows.ui.activities.AddSpecificTvShowActivity;
+import com.eseo.allmytvshows.ui.activities.AddTvShowActivity;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.adapters.MyShowsAdapter;
 import com.squareup.otto.Subscribe;
@@ -32,25 +32,16 @@ public class MyShowsFragment extends Fragment {
 
     static final String LOG_TAG = "MyShowsFragment";
 
-    private static MyShowsFragment instance;
-
     @Bind(R.id.my_recycler_view)
     public RecyclerView mRecyclerView;
     public FloatingActionButton mFab;
     private RecyclerView.Adapter mAdapter;
     private List<RealmTvShow> mContentItems = new ArrayList<>();
 
-    public static MyShowsFragment newInstance() {
-        if (instance == null) {
-            instance = new MyShowsFragment();
-        }
-        return instance;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppApplication.getBus().register(this);
+        TvShowApplication.getBus().register(this);
     }
 
     @Override
@@ -76,10 +67,11 @@ public class MyShowsFragment extends Fragment {
 
         //TODO: view.getRootView() not safe
         mFab = ButterKnife.findById(view.getRootView(), R.id.fab);
+        mFab.show();
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddSpecificTvShowActivity.class);
+                Intent intent = new Intent(getContext(), AddTvShowActivity.class);
                 startActivity(intent);
             }
         });
@@ -88,7 +80,9 @@ public class MyShowsFragment extends Fragment {
 
     @Subscribe
     public void getMessage(Data data) {
+
         if (data.getKey() == Data.NOTIFY_MY_SHOWS_ADAPTER) {
+
             final long realmIdToRemove = data.getLongValue();
             boolean removed = false;
             int i = 0;
@@ -99,9 +93,10 @@ public class MyShowsFragment extends Fragment {
                 }
                 i++;
             } while (i < mContentItems.size() || !removed);
-
             mAdapter.notifyDataSetChanged();
+
         } else if (data.getKey() == Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER) {
+
             mContentItems.clear();
             //TODO: dangerous thing with context - listeners/EventBus
             ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
@@ -113,7 +108,7 @@ public class MyShowsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        AppApplication.getBus().unregister(this);
+        TvShowApplication.getBus().unregister(this);
     }
 
 }

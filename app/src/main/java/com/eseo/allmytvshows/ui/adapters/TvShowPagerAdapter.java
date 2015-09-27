@@ -13,11 +13,13 @@ import com.eseo.allmytvshows.ui.fragments.MainActivity.MyShowsFragment;
 /**
  * Created by Damien on 9/26/15.
  */
-public class AppPagerAdapter extends FragmentPagerAdapter {
+public class TvShowPagerAdapter extends FragmentPagerAdapter {
+
+    static final String LOG_TAG = "TvShowPagerAdapter";
 
     private Activity activity;
 
-    public AppPagerAdapter(AppCompatActivity activity) {
+    public TvShowPagerAdapter(AppCompatActivity activity) {
         super(activity.getSupportFragmentManager());
         this.activity = activity;
     }
@@ -47,14 +49,18 @@ public class AppPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Fragment fragment = null;
         switch (position) {
-            case 0:
-                return MyShowsFragment.newInstance();
-            case 1:
-                return BestShowsFragment.newInstance();
-            default:
-                return MyShowsFragment.newInstance();
+            case 0: {
+                fragment = Fragment.instantiate(activity, MyShowsFragment.class.getName());
+                break;
+            }
+            case 1: {
+                fragment = Fragment.instantiate(activity, BestShowsFragment.class.getName());
+                break;
+            }
         }
+        return fragment;
     }
 
 }

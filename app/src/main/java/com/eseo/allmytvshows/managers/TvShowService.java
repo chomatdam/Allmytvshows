@@ -49,7 +49,7 @@ public class TvShowService {
      * @param item
      */
     public TvShowService(Context c, View v, TvShow item) {
-        AppApplication.getBus().register(this);
+        TvShowApplication.getBus().register(this);
         this.ctx = c;
         this.v = v;
         mContentItems.add(item);
@@ -63,7 +63,7 @@ public class TvShowService {
      * @param adapter
      */
     public TvShowService(View v, List<TvShow> mContentItems, RecyclerView.Adapter adapter) {
-        AppApplication.getBus().register(this);
+        TvShowApplication.getBus().register(this);
         this.v = v;
         this.mContentItems = mContentItems;
         this.mAdapter = adapter;
@@ -158,7 +158,7 @@ public class TvShowService {
                             final RealmFactory realmFactory = RealmFactory.newInstance(((MainActivity)ctx).getRealm());
                             realmFactory.execute(tvShow);
                             //TODO: find a way to unregister from bus in this class
-                            AppApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER));
+                            TvShowApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER));
                         }
                     });
 
