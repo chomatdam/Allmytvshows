@@ -1,10 +1,9 @@
 package com.eseo.allmytvshows.ui.adapters;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.ui.fragments.MainActivity.BestShowsFragment;
@@ -17,11 +16,11 @@ public class TvShowPagerAdapter extends FragmentPagerAdapter {
 
     static final String LOG_TAG = "TvShowPagerAdapter";
 
-    private Activity activity;
+    private Context ctx;
 
-    public TvShowPagerAdapter(AppCompatActivity activity) {
-        super(activity.getSupportFragmentManager());
-        this.activity = activity;
+    public TvShowPagerAdapter(FragmentManager fm, Context ctx) {
+        super(fm);
+        this.ctx = ctx;
     }
 
 
@@ -31,17 +30,12 @@ public class TvShowPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object o) {
-        return o == view;
-    }
-
-    @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return activity.getString(R.string.tabOne);
+                return ctx.getString(R.string.tabOne);
             case 1:
-                return activity.getString(R.string.tabTwo);
+                return ctx.getString(R.string.tabTwo);
             default:
                 return "Item " + (position + 1);
         }
@@ -52,11 +46,11 @@ public class TvShowPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0: {
-                fragment = Fragment.instantiate(activity, MyShowsFragment.class.getName());
+                fragment = Fragment.instantiate(ctx, MyShowsFragment.class.getName());
                 break;
             }
             case 1: {
-                fragment = Fragment.instantiate(activity, BestShowsFragment.class.getName());
+                fragment = Fragment.instantiate(ctx, BestShowsFragment.class.getName());
                 break;
             }
         }

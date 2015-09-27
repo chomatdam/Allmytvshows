@@ -47,7 +47,7 @@ public class TouchCheckBox extends View {
 
     private OnCheckedChangeListener listener;
     private int unCheckColor = Color.GRAY;
-    private int circleColor = Color.RED;
+    private int circleColor = Color.GREEN;
 
     public TouchCheckBox(Context context) {
         this(context, null);

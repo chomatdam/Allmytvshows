@@ -2,8 +2,8 @@ package com.eseo.allmytvshows.ui.fragments.MainActivity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +33,6 @@ public class BestShowsFragment extends Fragment implements NotifyAdapterListener
     public RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private List<TvShow> mContentItems = new ArrayList<>();
-    public FloatingActionButton mFab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,15 +53,13 @@ public class BestShowsFragment extends Fragment implements NotifyAdapterListener
         super.onViewCreated(view, savedInstanceState);
 
         mAdapter = new BestTvShowsAdapter(getActivity(), mContentItems);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         mRecyclerView.setAdapter(mAdapter);
 
         final TvShowService mTvShowService = new TvShowService(getActivity(), this);
         mTvShowService.getPopularTvShows();
-
-        //TODO: view.getRootView() not safe
-        mFab = ButterKnife.findById(view.getRootView(), R.id.fab);
-        mFab.hide();
-
 
     }
 

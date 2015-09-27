@@ -76,13 +76,12 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         switch (viewType) {
             case TYPE_HEADER: {
-                break;
+                return null;
             }
             case TYPE_CELL: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_card, parent, false);
-                return new TvShowViewHolder(view) {
-                };
+                return new TvShowViewHolder(view);
             }
         }
 
@@ -127,7 +126,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         }
                                     }
                                 })
-                                .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorites shows ?")
+                                .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorite tv shows ?")
                                 .positiveText("Continue")
                                 .negativeText("Abort")
                                 .show();
@@ -149,7 +148,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         }
                                     }
                                 })
-                                .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorites shows ?")
+                                .content("Are you sure to remove '" + contents.get(i).getOriginal_name() + "' from your favorite tv shows ?")
                                 .positiveText("Continue")
                                 .negativeText("Abort")
                                 .show();

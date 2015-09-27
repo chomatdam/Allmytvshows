@@ -1,10 +1,9 @@
 package com.eseo.allmytvshows.ui.fragments.MainActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import com.eseo.allmytvshows.dao.tvshow.impl.TvShowDaoImpl;
 import com.eseo.allmytvshows.managers.TvShowApplication;
 import com.eseo.allmytvshows.model.Data;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
-import com.eseo.allmytvshows.ui.activities.AddTvShowActivity;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.adapters.MyShowsAdapter;
 import com.squareup.otto.Subscribe;
@@ -34,7 +32,6 @@ public class MyShowsFragment extends Fragment {
 
     @Bind(R.id.my_recycler_view)
     public RecyclerView mRecyclerView;
-    public FloatingActionButton mFab;
     private RecyclerView.Adapter mAdapter;
     private List<RealmTvShow> mContentItems = new ArrayList<>();
 
@@ -63,18 +60,9 @@ public class MyShowsFragment extends Fragment {
         }
 
         mAdapter = new MyShowsAdapter(getActivity(), mContentItems);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
-
-        //TODO: view.getRootView() not safe
-        mFab = ButterKnife.findById(view.getRootView(), R.id.fab);
-        mFab.show();
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTvShowActivity.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
