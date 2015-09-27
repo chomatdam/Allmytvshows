@@ -1,10 +1,7 @@
 package com.eseo.allmytvshows.managers;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.eseo.allmytvshows.model.Data;
@@ -12,8 +9,8 @@ import com.eseo.allmytvshows.model.SearchResultsPage;
 import com.eseo.allmytvshows.model.Season;
 import com.eseo.allmytvshows.model.TvShow;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
+import com.eseo.allmytvshows.ui.listeners.NotifyAdapterListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -32,42 +29,36 @@ public class TvShowService {
     //Context for Realm
     private Context ctx;
 
-    //Error(s) to display
-    private View v;
-
     //data from WS
-    private List<TvShow> mContentItems = new ArrayList<>();
+    private TvShow tvShow;
 
     //notifyDataSetChanged
-    private RecyclerView.Adapter mAdapter;
-
-
-    /**
-     * Constructor used for "my tv shows" screen, you only need the tvshow checked by user, ask more data from WS,
-     * store data (and notify "my tv shows" screen).
-     * @param v
-     * @param item
-     */
-    public TvShowService(Context c, View v, TvShow item) {
-        TvShowApplication.getBus().register(this);
-        this.ctx = c;
-        this.v = v;
-        mContentItems.add(item);
-    }
+    private NotifyAdapterListener mInterface;
 
     /**
      * Constructor used for "Best tv shows" screen, you need to fulfill the list of tv shows returned by WS and notify the adapter,
      * you can also use the current view to display an error msg if necessary
-     * @param v
-     * @param mContentItems
-     * @param adapter
+     * @param c {@link Context}
+     * @param mInterface {@link NotifyAdapterListener}
      */
-    public TvShowService(View v, List<TvShow> mContentItems, RecyclerView.Adapter adapter) {
+    public TvShowService(Context c, NotifyAdapterListener mInterface) {
         TvShowApplication.getBus().register(this);
-        this.v = v;
-        this.mContentItems = mContentItems;
-        this.mAdapter = adapter;
+        this.ctx = c;
+        this.mInterface = mInterface;
     }
+
+    /**
+     * Constructor used for "my tv shows" screen, you only need the tvshow checked by user, ask more data from WS,
+     * store data (and notify "my tv shows" screen).
+     * @param c {@link Context}
+     * @param item {@link TvShow}
+     */
+    public TvShowService(Context c, TvShow item) {
+        TvShowApplication.getBus().register(this);
+        this.ctx = c;
+        this.tvShow = item;
+    }
+
 
     public void getPopularTvShows() {
 
@@ -76,39 +67,36 @@ public class TvShowService {
                                                                 .getService()
                                                                 .getPopularTvShows(MovieDbService.API_KEY);
 
-        observable.observeOn(AndroidSchedulers.mainThread())
+
+        observable.subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<SearchResultsPage>() {
                     @Override
                     public void onCompleted() {
                         unsubscribe();
+                        mInterface = null;
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Crashlytics.log(Log.ERROR, this.getClass().getSimpleName(), "Higgs boson detected! Bailing out...");
-                        Snackbar.make(v,
-                                "Oops...",
-                                Snackbar.LENGTH_LONG)
-                                .show();
                     }
 
                     @Override
                     public void onNext(SearchResultsPage data) {
-                        mContentItems.addAll(data.getResults());
-                        mAdapter.notifyDataSetChanged();
+                        mInterface.callbackBestTvShows(data);
                     }
 
                 });
     }
 
     public void getDataTVShow() {
-        if (!mContentItems.isEmpty()) {
-            final TvShow tvShow = mContentItems.get(0);
+        if (tvShow != null) {
             final Observable<TvShow> observable = RetrofitManager
                     .newInstance()
                     .getService()
                             //get TvShow with empty seasons
-                    .getDataTVShow(mContentItems.get(0).getId(), MovieDbService.API_KEY)
+                    .getDataTVShow(tvShow.getId(), MovieDbService.API_KEY)
                     //Observable because we have an asynchronous task to do (map = object -> object ;  flatmap = object -> Observable<?>)
                     .flatMap(new Func1<TvShow, Observable<TvShow>>() {
                         @Override

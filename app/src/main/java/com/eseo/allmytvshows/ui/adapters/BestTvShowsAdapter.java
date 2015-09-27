@@ -122,7 +122,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     public void onPositive(MaterialDialog dialog) {
                                         super.onPositive(dialog);
                                         if (!tvShowStored) {
-                                            TvShowService tvShowService = new TvShowService(ctx, buttonView.getRootView(), contents.get(i));
+                                            TvShowService tvShowService = new TvShowService(ctx, contents.get(i));
                                             tvShowService.getDataTVShow();
                                         }
                                     }

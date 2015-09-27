@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.managers.TvShowService;
+import com.eseo.allmytvshows.model.SearchResultsPage;
 import com.eseo.allmytvshows.model.TvShow;
 import com.eseo.allmytvshows.ui.adapters.BestTvShowsAdapter;
+import com.eseo.allmytvshows.ui.listeners.NotifyAdapterListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Damien on 9/21/15.
  */
-public class BestShowsFragment extends Fragment {
+public class BestShowsFragment extends Fragment implements NotifyAdapterListener{
 
     static final String LOG_TAG = "BestShowsFragment";
 
@@ -54,7 +56,7 @@ public class BestShowsFragment extends Fragment {
         mAdapter = new BestTvShowsAdapter(getActivity(), mContentItems);
         mRecyclerView.setAdapter(mAdapter);
 
-        final TvShowService mTvShowService = new TvShowService(getView(), mContentItems, mAdapter);
+        final TvShowService mTvShowService = new TvShowService(getActivity(), this);
         mTvShowService.getPopularTvShows();
 
         //TODO: view.getRootView() not safe
@@ -64,4 +66,9 @@ public class BestShowsFragment extends Fragment {
 
     }
 
+    @Override
+    public void callbackBestTvShows(SearchResultsPage data) {
+        mContentItems.addAll(data.getResults());
+        mAdapter.notifyDataSetChanged();
+    }
 }
