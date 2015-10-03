@@ -3,7 +3,9 @@ package com.eseo.allmytvshows.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -56,13 +58,20 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("");
         toolbar.setLogo(getResources().getDrawable(R.drawable.drawing));
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Welcome !", Snackbar.LENGTH_LONG).show();
+            }
+        });
 
-        clearDatabase(realm);
+        //clearDatabase(realm);
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
         }
 
-        mViewPager.setAdapter(new TvShowPagerAdapter(getSupportFragmentManager(), this));
+        PagerAdapter mAdapter = new TvShowPagerAdapter(getSupportFragmentManager(), this);
+        mViewPager.setAdapter(mAdapter);
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new WorkaroundTabLayoutOnPageChangeListener(tabLayout));
@@ -93,6 +102,15 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (searchView.isSearchOpen()) {
+            searchView.closeSearch();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private static void clearDatabase(Realm realm) {
         realm.beginTransaction();
         realm.where(RealmTvShow.class).findAll().clear();
@@ -100,8 +118,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStart() {
+        super.onStart();
+        realm = Realm.getInstance(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
         realm.close();
     }
 
@@ -111,26 +135,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddTvShowActivity.class);
                 startActivity(intent);
-            }
-        });
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    mFab.show();
-                } else {
-                    mFab.hide();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                //do nothing
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                //do nothing
             }
         });
     }

@@ -91,29 +91,30 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
         final ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity) ctx).getRealm());
-        final boolean tvShowStored = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
+        boolean initCheckBox = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
         switch (getItemViewType(i)) {
             case TYPE_HEADER:
                 break;
             case TYPE_CELL:
-                TvShowViewHolder tvShowViewHolder = (TvShowViewHolder) viewHolder;
+                final TvShowViewHolder tvShowViewHolder = (TvShowViewHolder) viewHolder;
                 tvShowViewHolder.tvShowName.setText(contents.get(i).getOriginal_name());
                 Picasso .with(ctx)
                         .load(RetrofitManager.IMAGE_URL + contents.get(i).getPoster_path())
                         .into(tvShowViewHolder.coverArt);
                 tvShowViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
-                tvShowViewHolder.added.setChecked(tvShowStored);
+                tvShowViewHolder.added.setChecked(initCheckBox);
                 tvShowViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(final View buttonView, boolean isChecked) {
+                        boolean tvShowStored = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
                         if (isChecked) {
-                            addTvShow(buttonView);
+                            addTvShow(tvShowStored, isChecked);
                         } else {
-                            removeTvShow();
+                            removeTvShow(tvShowStored, isChecked);
                         }
                     }
 
-                    private void addTvShow(final View buttonView) {
+                    private void addTvShow(final boolean tvShowStored, final boolean isChecked) {
                         new MaterialDialog.Builder(ctx)
                                 .title("Add a new TV show")
                                 .callback(new MaterialDialog.ButtonCallback() {
@@ -125,6 +126,10 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                             tvShowService.getDataTVShow();
                                         }
                                     }
+                                    @Override
+                                    public void onNegative(MaterialDialog dialog) {
+                                        super.onNegative(dialog);
+                                    }
                                 })
                                 .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorite tv shows ?")
                                 .positiveText("Continue")
@@ -132,7 +137,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 .show();
                     }
 
-                    private void removeTvShow() {
+                    private void removeTvShow(final boolean tvShowStored, final boolean isChecked) {
                         new MaterialDialog.Builder(ctx)
                                 .title("Remove this TV show")
                                 .callback(new MaterialDialog.ButtonCallback() {
@@ -146,6 +151,10 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                                 iTvShowDao.remove(realmTvShow);
                                             }
                                         }
+                                    }
+                                    @Override
+                                    public void onNegative(MaterialDialog dialog) {
+                                        super.onNegative(dialog);
                                     }
                                 })
                                 .content("Are you sure to remove '" + contents.get(i).getOriginal_name() + "' from your favorite tv shows ?")

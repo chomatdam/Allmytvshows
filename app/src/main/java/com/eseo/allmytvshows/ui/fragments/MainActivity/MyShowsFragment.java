@@ -71,17 +71,23 @@ public class MyShowsFragment extends Fragment {
 
         if (data.getKey() == Data.NOTIFY_MY_SHOWS_ADAPTER) {
 
-            final long realmIdToRemove = data.getLongValue();
-            boolean removed = false;
-            int i = 0;
-            do {
-                if (mContentItems.get(i).getId() == realmIdToRemove) {
-                    mContentItems.remove(i);
-                    removed = true;
-                }
-                i++;
-            } while (i < mContentItems.size() || !removed);
+            mContentItems.clear();
+            //TODO: dangerous thing with context - listeners/EventBus
+            ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
+            mContentItems.addAll(iTvShowDao.findAll());
             mAdapter.notifyDataSetChanged();
+//
+//            final long realmIdToRemove = data.getLongValue();
+//            boolean removed = false;
+//            int i = 0;
+//            do {
+//                if (mContentItems.get(i).getId() == realmIdToRemove) {
+//                    mContentItems.remove(i);
+//                    removed = true;
+//                }
+//                i++;
+//            } while (i < mContentItems.size() || !removed);
+//            mAdapter.notifyDataSetChanged();
 
         } else if (data.getKey() == Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER) {
 
