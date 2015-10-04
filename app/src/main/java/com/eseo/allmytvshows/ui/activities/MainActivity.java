@@ -19,7 +19,6 @@ import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
 import com.eseo.allmytvshows.ui.adapters.TvShowPagerAdapter;
 import com.eseo.allmytvshows.ui.listeners.WorkaroundTabLayoutOnPageChangeListener;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.tablayout)
     public TabLayout tabLayout;
-
-    @Bind(R.id.search_view)
-    public MaterialSearchView searchView;
 
     @Bind(R.id.viewpager)
     public ViewPager mViewPager;
@@ -76,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new WorkaroundTabLayoutOnPageChangeListener(tabLayout));
 
-        onPrepareSearchView();
         initFab();
 
         }
@@ -84,8 +79,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-        searchView.setMenuItem(item);
+
         return true;
     }
 
@@ -100,15 +94,6 @@ public class MainActivity extends AppCompatActivity {
         //TODO: implement menu
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (searchView.isSearchOpen()) {
-            searchView.closeSearch();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     private static void clearDatabase(Realm realm) {
@@ -135,34 +120,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, AddTvShowActivity.class);
                 startActivity(intent);
-            }
-        });
-    }
-
-    public void onPrepareSearchView() {
-        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //Do some magic
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Do some magic
-                return false;
-            }
-        });
-
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-                //Do some magic
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-                //Do some magic
             }
         });
     }

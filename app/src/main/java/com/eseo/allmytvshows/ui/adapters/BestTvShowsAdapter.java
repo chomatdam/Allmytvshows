@@ -20,6 +20,7 @@ import com.eseo.allmytvshows.model.TvShow;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
 import com.eseo.allmytvshows.ui.activities.MainActivity;
 import com.eseo.allmytvshows.ui.views.TouchCheckBox;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -147,8 +148,9 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         if (tvShowStored) {
                                             final RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
                                             if (realmTvShow != null) {
-                                                TvShowApplication.getBus().post(new Data(Data.NOTIFY_MY_SHOWS_ADAPTER, realmTvShow.getId()));
+                                                final long idRealmTvShow = realmTvShow.getId();
                                                 iTvShowDao.remove(realmTvShow);
+                                                TvShowApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER, idRealmTvShow));
                                             }
                                         }
                                     }
@@ -169,6 +171,13 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         return contents.size();
+    }
+
+    @Subscribe
+    public void refreshView(Data data) {
+        if (data.getKey() == Data.REFRESH_ALL_DATA_BEST_SHOWS_ADAPTER) {
+            this.notifyDataSetChanged();
+        }
     }
 
 }

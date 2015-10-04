@@ -32,6 +32,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context ctx;
     private List<RealmTvShow> contents;
 
+
     public static class TvShowViewHolder extends RecyclerView.ViewHolder {
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
@@ -70,8 +71,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case TYPE_CELL: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.list_item_card, parent, false);
-                return new TvShowViewHolder(view) {
-                };
+                return new TvShowViewHolder(view);
             }
         }
 

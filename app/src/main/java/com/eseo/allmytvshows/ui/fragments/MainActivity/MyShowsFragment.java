@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class MyShowsFragment extends Fragment {
 
     @Bind(R.id.my_recycler_view)
     public RecyclerView mRecyclerView;
+
     private RecyclerView.Adapter mAdapter;
     private List<RealmTvShow> mContentItems = new ArrayList<>();
 
@@ -64,33 +66,31 @@ public class MyShowsFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
+        ItemTouchHelper swipeToDismissTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final int position = viewHolder.getAdapterPosition();
+                final ITvShowDao iTvShowDao1 = new TvShowDaoImpl(((MainActivity) getActivity()).getRealm());
+                iTvShowDao1.remove(mContentItems.get(position));
+                mContentItems.remove(position);
+                mAdapter.notifyItemRemoved(position);
+                TvShowApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_BEST_SHOWS_ADAPTER));
+            }
+        });
+        swipeToDismissTouchHelper.attachToRecyclerView(mRecyclerView);
+
     }
 
     @Subscribe
     public void getMessage(Data data) {
 
-        if (data.getKey() == Data.NOTIFY_MY_SHOWS_ADAPTER) {
-
-            mContentItems.clear();
-            //TODO: dangerous thing with context - listeners/EventBus
-            ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());
-            mContentItems.addAll(iTvShowDao.findAll());
-            mAdapter.notifyDataSetChanged();
-//
-//            final long realmIdToRemove = data.getLongValue();
-//            boolean removed = false;
-//            int i = 0;
-//            do {
-//                if (mContentItems.get(i).getId() == realmIdToRemove) {
-//                    mContentItems.remove(i);
-//                    removed = true;
-//                }
-//                i++;
-//            } while (i < mContentItems.size() || !removed);
-//            mAdapter.notifyDataSetChanged();
-
-        } else if (data.getKey() == Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER) {
-
+        if (data.getKey() == Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER) {
             mContentItems.clear();
             //TODO: dangerous thing with context - listeners/EventBus
             ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity)getActivity()).getRealm());

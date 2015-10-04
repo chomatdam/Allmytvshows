@@ -5,7 +5,7 @@ package com.eseo.allmytvshows.model;
  */
 public class Data {
 
-    public static final int NOTIFY_MY_SHOWS_ADAPTER = 1;
+    public static final int REFRESH_ALL_DATA_BEST_SHOWS_ADAPTER = 1;
     public static final int REFRESH_ALL_DATA_MY_SHOWS_ADAPTER = 2;
 
     private int key;
