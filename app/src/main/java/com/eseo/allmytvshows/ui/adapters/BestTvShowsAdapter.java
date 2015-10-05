@@ -116,36 +116,38 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
 
                     private void addTvShow(final boolean tvShowStored, final boolean isChecked) {
-                        new MaterialDialog.Builder(ctx)
-                                .title("Add a new TV show")
-                                .callback(new MaterialDialog.ButtonCallback() {
-                                    @Override
-                                    public void onPositive(MaterialDialog dialog) {
-                                        super.onPositive(dialog);
-                                        if (!tvShowStored) {
-                                            TvShowService tvShowService = new TvShowService(ctx, contents.get(i));
-                                            tvShowService.getDataTVShow();
+                        if (!tvShowStored) {
+                            new MaterialDialog.Builder(ctx)
+                                    .title("Add a new TV show")
+                                    .callback(new MaterialDialog.ButtonCallback() {
+                                        @Override
+                                        public void onPositive(MaterialDialog dialog) {
+                                            super.onPositive(dialog);
+                                                TvShowService tvShowService = new TvShowService(ctx, contents.get(i));
+                                                tvShowService.getDataTVShow();
                                         }
-                                    }
-                                    @Override
-                                    public void onNegative(MaterialDialog dialog) {
-                                        super.onNegative(dialog);
-                                    }
-                                })
-                                .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorite tv shows ?")
-                                .positiveText("Continue")
-                                .negativeText("Abort")
-                                .show();
+
+                                        @Override
+                                        public void onNegative(MaterialDialog dialog) {
+                                            super.onNegative(dialog);
+                                            tvShowViewHolder.added.setChecked(!isChecked);
+                                        }
+                                    })
+                                    .content("Are you sure to add '" + contents.get(i).getOriginal_name() + "' to your favorite tv shows ?")
+                                    .positiveText("Continue")
+                                    .negativeText("Abort")
+                                    .show();
+                        }
                     }
 
                     private void removeTvShow(final boolean tvShowStored, final boolean isChecked) {
-                        new MaterialDialog.Builder(ctx)
-                                .title("Remove this TV show")
-                                .callback(new MaterialDialog.ButtonCallback() {
-                                    @Override
-                                    public void onPositive(MaterialDialog dialog) {
-                                        super.onPositive(dialog);
-                                        if (tvShowStored) {
+                        if (tvShowStored) {
+                            new MaterialDialog.Builder(ctx)
+                                    .title("Remove this TV show")
+                                    .callback(new MaterialDialog.ButtonCallback() {
+                                        @Override
+                                        public void onPositive(MaterialDialog dialog) {
+                                            super.onPositive(dialog);
                                             final RealmTvShow realmTvShow = iTvShowDao.findByName(contents.get(i).getOriginal_name());
                                             if (realmTvShow != null) {
                                                 final long idRealmTvShow = realmTvShow.getId();
@@ -153,16 +155,18 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                                 TvShowApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_MY_SHOWS_ADAPTER, idRealmTvShow));
                                             }
                                         }
-                                    }
-                                    @Override
-                                    public void onNegative(MaterialDialog dialog) {
-                                        super.onNegative(dialog);
-                                    }
-                                })
-                                .content("Are you sure to remove '" + contents.get(i).getOriginal_name() + "' from your favorite tv shows ?")
-                                .positiveText("Continue")
-                                .negativeText("Abort")
-                                .show();
+
+                                        @Override
+                                        public void onNegative(MaterialDialog dialog) {
+                                            super.onNegative(dialog);
+                                            tvShowViewHolder.added.setChecked(!isChecked);
+                                        }
+                                    })
+                                    .content("Are you sure to remove '" + contents.get(i).getOriginal_name() + "' from your favorite tv shows ?")
+                                    .positiveText("Continue")
+                                    .negativeText("Abort")
+                                    .show();
+                        }
                     }
                 });
             }
