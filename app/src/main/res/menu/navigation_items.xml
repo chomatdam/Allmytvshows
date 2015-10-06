@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_white_24dp"
+            android:title="@string/drawer_home" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_today_white_24dp"
+            android:title="@string/drawer_calendar" />
+        <item
+            android:id="@+id/nav_archived_tv_shows"
+            android:icon="@drawable/ic_archive_white_24dp"
+            android:title="@string/drawer_archived" />
+        <item
+            android:id="@+id/nav_deleted_tv_shows"
+            android:icon="@drawable/ic_action_discard"
+            android:title="@string/drawer_deleted" />
+    </group>
+
+</menu>

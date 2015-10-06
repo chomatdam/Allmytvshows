@@ -10,9 +10,7 @@ import io.realm.RealmList;
  */
 public interface IEpisodeDao extends IBaseDao<RealmEpisode>{
 
-    public int getSeenEpisodeNumber(final String nameTvShow, final int seasonNumber);
-
-    public int getSeenEpisodeNumber(final String nameTvShow);
+    public long getSeenEpisodeNumber(final long seasonId);
 
     public RealmList<RealmEpisode> getEpisodesNotAiredYet (final String nameTvShow);
 

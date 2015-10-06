@@ -1,5 +1,9 @@
 package com.eseo.allmytvshows.ui.fragments.MainActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -81,6 +85,32 @@ public class MyShowsFragment extends Fragment {
                 mContentItems.remove(position);
                 mAdapter.notifyItemRemoved(position);
                 TvShowApplication.getBus().post(new Data(Data.REFRESH_ALL_DATA_BEST_SHOWS_ADAPTER));
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView,
+                                    RecyclerView.ViewHolder viewHolder, float dX, float dY,
+                                    int actionState, boolean isCurrentlyActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    View itemView = viewHolder.itemView;
+                    Paint p = new Paint();
+                    if (dX > 0) {
+                        //swipe left
+                        p.setARGB(255, 255, 152, 0);
+                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                (float) itemView.getBottom(), p);
+                        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.ic_archive_white_24dp);
+                        c.drawBitmap(b, itemView.getLeft() + 20, itemView.getTop() + itemView.getMeasuredHeight() / 3, p);
+                    } else {
+                        //swipe right
+                        p.setARGB(255, 244, 67, 54);
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_discard);
+                        c.drawBitmap(b,itemView.getRight() + dX + 20, itemView.getTop() + itemView.getMeasuredHeight()/4, p);
+                    }
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
             }
         });
         swipeToDismissTouchHelper.attachToRecyclerView(mRecyclerView);

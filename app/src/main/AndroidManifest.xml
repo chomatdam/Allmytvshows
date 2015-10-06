@@ -27,6 +27,14 @@
             android:name=".ui.activities.AddTvShowActivity"
             android:label="@string/title_activity_search" >
         </activity>
+        <activity
+            android:name=".ui.activities.DetailedTvShowActivity"
+            android:label="@string/title_activity_detailed_tv_show"
+            android:parentActivityName=".ui.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eseo.allmytvshows.ui.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

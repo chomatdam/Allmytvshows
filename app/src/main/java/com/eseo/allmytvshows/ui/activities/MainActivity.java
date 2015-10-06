@@ -3,10 +3,13 @@ package com.eseo.allmytvshows.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -34,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     public Toolbar toolbar;
 
+    @Bind(R.id.drawerLayout)
+    public DrawerLayout drawerLayout;
+
+    @Bind(R.id.navigation)
+    public NavigationView navigationView;
+
     @Bind(R.id.fab)
     public FloatingActionButton mFab;
 
@@ -51,13 +60,39 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         realm = Realm.getInstance(this);
 
+        //toolbar
         toolbar.setTitle("");
         toolbar.setLogo(getResources().getDrawable(R.drawable.drawing));
+        toolbar.setNavigationIcon(R.drawable.ic_dehaze_white_24dp);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Snackbar.make(v, "Welcome !", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+        //navigation drawer
+        drawerLayout.setStatusBarBackground(R.color.primary_dark);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                drawerLayout.closeDrawers();
+                menuItem.setChecked(true);
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_home:
+                        // TODO - Do something
+                        break;
+                    case R.id.nav_calendar:
+                        break;
+                    case R.id.nav_archived_tv_shows:
+                        break;
+                    case R.id.nav_deleted_tv_shows:
+                        break;
+                }
+                return true;
             }
         });
 
@@ -66,13 +101,21 @@ public class MainActivity extends AppCompatActivity {
             Fabric.with(this, new Crashlytics());
         }
 
+        //tabs and swipe between fragments
         PagerAdapter mAdapter = new TvShowPagerAdapter(getSupportFragmentManager(), this);
         mViewPager.setAdapter(mAdapter);
         tabLayout.setupWithViewPager(mViewPager);
         mViewPager.clearOnPageChangeListeners();
         mViewPager.addOnPageChangeListener(new WorkaroundTabLayoutOnPageChangeListener(tabLayout));
 
-        initFab();
+        //fab listener (button used to add a specific tv show)
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddTvShowActivity.class);
+                startActivity(intent);
+            }
+        });
 
         }
 
@@ -80,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -91,7 +134,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        //TODO: implement menu
+        switch (id) {
+            case android.R.id.home: {
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            }
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -112,16 +160,6 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         realm.close();
-    }
-
-    private void initFab() {
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddTvShowActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     public Realm getRealm() {

@@ -6,7 +6,20 @@
     <string name="tabTwo">Best TV shows</string>
     <string name="title_activity_search">SearchActivity</string>
 
+    <!-- nav drawer accessibility -->
+    <string name="drawer_open">Open drawer</string>
+    <string name="drawer_close">Close drawer</string>
+    <!-- nav drawers items -->
+    <string name="drawer_home">Home</string>
+    <string name="drawer_calendar">Calendar</string>
+    <string name="drawer_archived">Archived TV shows</string>
+    <string name="drawer_deleted">Trash</string>
+
+    <!--  -->
+    <string name="detail_season_number">Season %d</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_detailed_tv_show">DetailedTvShowActivity</string>
 
 </resources>

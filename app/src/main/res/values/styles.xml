@@ -7,6 +7,11 @@
 
         <item name="android:textColorPrimary">@android:color/white</item>
 
+        @TargetApi(21)
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        @TargetApi(21)
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
         <!-- Material Theme -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>

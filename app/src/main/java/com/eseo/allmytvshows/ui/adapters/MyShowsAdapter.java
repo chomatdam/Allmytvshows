@@ -1,6 +1,8 @@
 package com.eseo.allmytvshows.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.managers.RetrofitManager;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
+import com.eseo.allmytvshows.ui.activities.DetailedTvShowActivity;
 import com.eseo.allmytvshows.ui.views.TouchCheckBox;
 import com.squareup.picasso.Picasso;
 
@@ -34,6 +37,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public static class TvShowViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.card_view) CardView cardView;
         @Bind({R.id.imageView}) ImageView coverArt;
         @Bind({R.id.textView}) TextView tvShowName;
         @Bind({R.id.textView2}) TextView tvShowDetail;
@@ -79,7 +83,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
 
         switch (getItemViewType(i)) {
             case TYPE_HEADER:
@@ -92,6 +96,14 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         .into(tvShowViewHolder.coverArt);
                 tvShowViewHolder.tvShowDetail.setText(contents.get(i).getNextEpisode());
                 tvShowViewHolder.added.setVisibility(View.INVISIBLE);
+                tvShowViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ctx, DetailedTvShowActivity.class);
+                        intent.putExtra("tvshow", contents.get(i).getId());
+                        ctx.startActivity(intent);
+                    }
+                });
                 break;
         }
     }
