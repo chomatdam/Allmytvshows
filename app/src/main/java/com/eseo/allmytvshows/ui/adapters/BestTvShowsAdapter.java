@@ -92,7 +92,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
         final ITvShowDao iTvShowDao = new TvShowDaoImpl(((MainActivity) ctx).getRealm());
-        boolean initCheckBox = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
+        boolean initCheckBox = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) != null);
         switch (getItemViewType(i)) {
             case TYPE_HEADER:
                 break;
@@ -107,7 +107,7 @@ public class BestTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 tvShowViewHolder.added.setOnCheckedChangeListener(new TouchCheckBox.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(final View buttonView, boolean isChecked) {
-                        boolean tvShowStored = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) == null ? false : true);
+                        boolean tvShowStored = (iTvShowDao.findByName(contents.get(i).getOriginal_name()) != null);
                         if (isChecked) {
                             addTvShow(tvShowStored, isChecked);
                         } else {

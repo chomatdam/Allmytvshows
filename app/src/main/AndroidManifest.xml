@@ -28,12 +28,22 @@
             android:label="@string/title_activity_search" >
         </activity>
         <activity
-            android:name=".ui.activities.DetailedTvShowActivity"
+            android:name=".ui.activities.DetailSeasonActivity"
             android:label="@string/title_activity_detailed_tv_show"
             android:parentActivityName=".ui.activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.eseo.allmytvshows.ui.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activities.DetailEpisodeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_detail_episode"
+            android:parentActivityName=".ui.activities.DetailSeasonActivity"
+            android:theme="@style/FullscreenTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eseo.allmytvshows.ui.activities.DetailSeasonActivity" />
         </activity>
     </application>
 

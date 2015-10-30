@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/episode_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:layout_margin="2dp"
+    app:cardBackgroundColor="#55FFFFFF"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp"
+    app:cardPreventCornerOverlap="false"
+    app:contentPadding="0dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/detail_episode_ep_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="Episode X "
+            android:layout_alignStart="@+id/detail_episode_anchor"
+            android:layout_above="@+id/detail_episode_anchor"/>
+
+        <View
+            android:id="@+id/detail_episode_anchor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:id="@+id/detail_episode_ep_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Episode name with air date"
+            android:layout_marginTop="3dp"
+            android:layout_alignStart="@+id/detail_episode_anchor"
+            android:layout_below="@+id/detail_episode_anchor"/>
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -7,16 +7,25 @@
 
         <item name="android:textColorPrimary">@android:color/white</item>
 
-        @TargetApi(21)
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        @TargetApi(21)
-        <item name="android:statusBarColor">@android:color/transparent</item>
+
 
         <!-- Material Theme -->
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
 
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 </resources>

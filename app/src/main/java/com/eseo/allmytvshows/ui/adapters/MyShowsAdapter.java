@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.eseo.allmytvshows.R;
 import com.eseo.allmytvshows.managers.RetrofitManager;
 import com.eseo.allmytvshows.model.realm.RealmTvShow;
-import com.eseo.allmytvshows.ui.activities.DetailedTvShowActivity;
+import com.eseo.allmytvshows.ui.activities.DetailSeasonActivity;
 import com.eseo.allmytvshows.ui.views.TouchCheckBox;
 import com.squareup.picasso.Picasso;
 
@@ -99,7 +99,7 @@ public class MyShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 tvShowViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(ctx, DetailedTvShowActivity.class);
+                        Intent intent = new Intent(ctx, DetailSeasonActivity.class);
                         intent.putExtra("tvshow", contents.get(i).getId());
                         ctx.startActivity(intent);
                     }

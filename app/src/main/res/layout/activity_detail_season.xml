@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/detail_season_tvshow_name"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:text="TV SHOW"
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="@color/primary"/>
+
+    <ImageView
+            android:id="@+id/detail_season_picture"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:text="Seasons"
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:background="@color/primary"/>
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/my_recycler_view"
+        android:background="@android:color/transparent"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

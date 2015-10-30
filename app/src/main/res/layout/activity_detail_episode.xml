@@ -1,0 +1,20 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detail_episode_content_layout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.eseo.allmytvshows.ui.activities.DetailEpisodeActivity">
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/episode_recycler_view"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="528dp" />
+
+    <Button android:id="@+id/season_already_seen_button" style="?metaButtonBarButtonStyle"
+        android:layout_width="match_parent" android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:text="@string/dummy_button" />
+
+</FrameLayout>

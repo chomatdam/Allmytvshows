@@ -16,10 +16,14 @@
     <string name="drawer_deleted">Trash</string>
 
     <!--  -->
-    <string name="detail_season_number">Season %d</string>
+    <string name="detail_season_number">Season %d (</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_detailed_tv_show">DetailedTvShowActivity</string>
+
+    <string name="title_activity_detail_episode">DetailEpisodeActivity</string>
+    <string name="dummy_button">See all</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

@@ -1,29 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<co.mobiwise.library.ProgressLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/progressLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="50dp"
+    app:maxProgress="100"
+    app:emptyColor="#FFFFFF"
+    app:loadedColor="#F1F8E9"
+    app:autoProgress="false" >
 
-    <com.eseo.allmytvshows.ui.views.TouchCheckBox
-        android:id="@+id/checkboxSeason"
-        android:layout_marginStart="25dp"
-        android:layout_width="25dp"
-        android:layout_height="25dp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:paddingTop="5dp"
-        android:textStyle="italic"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:text="Medium Text"
-        android:id="@+id/seasonName" />
+            <TextView
+                android:paddingLeft="20dp"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:text="Medium Text"
+                android:id="@+id/seasonName"
+                android:gravity="center_vertical" />
 
-    <TextView
-        android:paddingTop="5dp"
-        android:textStyle="italic"
+            <TextView
+                android:textStyle="italic"
+                android:layout_width="140dp"
+                android:layout_height="40dp"
+                android:text="X / Total"
+                android:id="@+id/episodesSeen"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:paddingLeft="60dp"
+                android:paddingRight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="X / Total"
-        android:id="@+id/episodesSeen" />
+        android:layout_height="0.5dp"
+        android:background="#EEEEEE"/>
 
-</LinearLayout>
+</co.mobiwise.library.ProgressLayout>
